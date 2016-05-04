@@ -18,5 +18,8 @@ Public Class frm_main
         tree_Main.Nodes.Add(structs.tree_Node)
     End Sub
 
-
+    Private Sub tree_Main_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles tree_Main.AfterSelect
+        lst_bx_Files.Items.Clear()
+        lst_bx_Files.Items.AddRange(structs.get_Files(structs.directory(tree_Main.SelectedNode)))
+    End Sub
 End Class

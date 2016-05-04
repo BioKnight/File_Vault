@@ -12,11 +12,23 @@ Public Class Structures
         End Get
     End Property
 
-    Public ReadOnly Property directory(dir_Name) As DirectoryInfo
+    Public ReadOnly Property directory(selected_Node As TreeNode) As DirectoryInfo
         Get
-            Return (find_Dir_Info(tree, dir_Name))
+            Return (New DirectoryInfo(selected_Node.FullPath.ToString.Replace("Root", root.FullName.ToString.TrimEnd("\"))))
         End Get
     End Property
+
+    ''' <summary>
+    ''' Returns a list of the files in the given directory
+    ''' </summary>
+    ''' <param name="directory">A directoryinfo object to scan.</param>
+    ''' <returns>List of fileinfo</returns>
+    Public ReadOnly Property get_Files(directory As DirectoryInfo)
+        Get
+            Return directory.GetFiles
+        End Get
+    End Property
+
     Private root As DirectoryInfo
     Private tree As New TreeNode("Root")
 
@@ -51,23 +63,6 @@ Public Class Structures
         Next
 
         Return tempnode
-    End Function
-
-    ''' <summary>
-    ''' Searches the tree to find the node path, then returnes a directoryinfo object.
-    ''' </summary>
-    ''' <param name="node">the node to check, and search</param>
-    ''' <param name="directory_Name">a string representing the name of the directory.</param>
-    ''' <returns></returns>
-    Private Function find_Dir_Info(node As TreeNode, directory_Name As String)
-        If node.Name = directory_Name Then Return node.Name
-        For Each nodes As TreeNode In node.Nodes
-            If nodes.Nodes.Count > 0 Then
-                For Each child As TreeNode In node.Nodes
-
-                Next
-            End If
-        Next
     End Function
 
 End Class
