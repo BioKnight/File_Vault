@@ -9,25 +9,14 @@ Imports System.Text
 ' Tutorial: http://stackoverflow.com/questions/2301997/how-to-encrypt-a-file-folder-using-vb-net
 
 Public Class frm_main
-    Private application_Path As DirectoryInfo = New DirectoryInfo(".\")
+    Private application_Path As String = ".\"
+
+    Private structs As Structures
 
     Private Sub frm_main_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        ' Read the current directory structure
-
-        'MsgBox(application_Path.FullName)
-        For Each folder As DirectoryInfo In application_Path.GetDirectories
-            'MsgBox(folder.FullName)
-            tree_Main.Nodes(0).Nodes.Add(create_Node(folder))
-        Next
+        structs = New Structures(application_Path)
+        tree_Main.Nodes.Add(structs.tree_Node)
     End Sub
 
-    Private Function create_Node(ByRef folder As DirectoryInfo) As TreeNode
-        Dim tempnode As New TreeNode(folder.Name)
-        For Each child_folder As DirectoryInfo In folder.GetDirectories
-            tempnode.Nodes.Add(create_Node(child_folder))
-        Next
-
-        Return tempnode
-    End Function
 
 End Class
