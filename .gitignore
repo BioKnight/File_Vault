@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/File_Vault/File_Vault/Icons/Thumbs.db
