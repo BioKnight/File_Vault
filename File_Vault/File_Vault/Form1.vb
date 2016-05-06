@@ -22,4 +22,12 @@ Public Class frm_main
         lst_bx_Files.Items.Clear()
         lst_bx_Files.Items.AddRange(structs.get_Files(structs.directory(tree_Main.SelectedNode)))
     End Sub
+
+    Private Sub lst_bx_Files_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lst_bx_Files.SelectedIndexChanged
+        Select Case lst_bx_Files.SelectedItem.ToString.Remove(0, (lst_bx_Files.SelectedItem.ToString.IndexOf(".")))
+            Case ".jpg"
+                picbx_Main.Image = New Bitmap(structs.directory(tree_Main.SelectedNode).FullName & "\" & lst_bx_Files.SelectedItem.ToString)
+        End Select
+
+    End Sub
 End Class
