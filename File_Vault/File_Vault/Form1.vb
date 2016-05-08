@@ -14,8 +14,7 @@ Public Class frm_main
     Private application_Path As String = ".\"
 
     Private structs As Structures
-
-    Private grapx As Graphics
+    Private Image_Handle As Image_Handlers
 
     Private Sub frm_main_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         structs = New Structures(application_Path)
@@ -30,8 +29,13 @@ Public Class frm_main
     Private Sub lst_bx_Files_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lst_bx_Files.SelectedIndexChanged
         Select Case lst_bx_Files.SelectedItem.ToString.Remove(0, (lst_bx_Files.SelectedItem.ToString.IndexOf(".")))
             Case ".jpg" ' Handle jpg's
-
+                Image_Handle = New Image_Handlers(structs.directory(tree_Main.SelectedNode).FullName & "\" & lst_bx_Files.SelectedItem.ToString)
+                Image_Handle.show_Image()
         End Select
+
+    End Sub
+
+    Private Sub frm_main_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 
     End Sub
 End Class

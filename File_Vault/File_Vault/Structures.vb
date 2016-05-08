@@ -44,12 +44,12 @@ Public Class Structures
     ''' <summary>
     ''' Read the current directory structure
     ''' </summary>
-    Private Function build_List() As TreeNode
+    Private Sub build_List()
         For Each folder As DirectoryInfo In root.GetDirectories
             'tree_Main.Nodes(0).Nodes.Add(create_Node(folder))
             tree.Nodes.Add(create_Node(folder))
         Next
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Build the treeview.
