@@ -35,7 +35,7 @@ Public Class frm_main
 
     End Sub
 
-    Private Sub frm_main_Resize(sender As Object, e As EventArgs) Handles Me.Resize
-
+    Private Sub lbl_Hidden_Button_DoubleClick(sender As Object, e As EventArgs) Handles lbl_Hidden_Button.DoubleClick
+        frm_Hidden_Dialog.show
     End Sub
 End Class
