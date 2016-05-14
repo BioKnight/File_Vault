@@ -1,4 +1,6 @@
 ﻿Imports System.Drawing.Drawing2D
+'Imports System.Drawing
+'Imports System.IO
 
 Public Class Image_Handlers
 
@@ -35,7 +37,7 @@ Public Class Image_Handlers
         pic = New Bitmap(Image_Path)
         image_form = New Form()
         image_form.Size = default_Size
-        image_form.FormBorderStyle = FormBorderStyle.FixedSingle
+        image_form.FormBorderStyle = FormBorderStyle.Sizable
         image_form.ControlBox = False
         image_form.MinimizeBox = False
         image_form.MaximizeBox = False
@@ -43,7 +45,7 @@ Public Class Image_Handlers
         image_form.BackgroundImageLayout = ImageLayout.Center
 
 
-        AddHandler image_form.Resize, AddressOf resize
+        'AddHandler image_form.Resize, AddressOf resize
         AddHandler image_form.DoubleClick, AddressOf close_form
         AddHandler image_form.MouseDown, AddressOf mouse_down
         'AddHandler image_form.MouseUp, AddressOf mouse_down
@@ -53,7 +55,7 @@ Public Class Image_Handlers
 
     Public Sub dispose()
         pic.Dispose()
-
+        image_form.Dispose()
     End Sub
 
     Public Sub size_Image(height, width)
@@ -82,11 +84,25 @@ Public Class Image_Handlers
             NewHeight = NewWidth / pic.Width * pic.Height
         End If
 
-        pic = New Bitmap(pic, NewWidth, NewHeight)
+        pic = ResizeImage(NewHeight, NewWidth)
+        'pic = New Bitmap(pic, NewWidth, NewHeight)
 
     End Sub
 
-    Private Sub resize(sender As Object, e As EventArgs)
+    Private Sub size_Image(ByVal newHeight As Integer, ByVal newWidth As Integer)
+
+        ' Determine difference in hight and width
+        'Dim NewHeight As Integer = image_form.Height
+        Dim NewWidth As Integer = NewHeight / pic.Height * pic.Width
+
+
+
+        pic = ResizeImage(NewHeight, NewWidth)
+        'pic = New Bitmap(pic, NewWidth, NewHeight)
+
+    End Sub
+
+    Private Sub resize()
         size_Image()
         image_form.BackgroundImage = pic
     End Sub
@@ -97,81 +113,14 @@ Public Class Image_Handlers
     End Sub
 
     Private Sub close_form()
-        image_form.Close()
+        'image_form.Close()
+        dispose()
     End Sub
 
     Private Sub mouse_down(sender As Object, e As MouseEventArgs)
         start_location = New Point(e.Location)
 
-        ' Found this code at https://social.msdn.microsoft.com/Forums/vstudio/en-US/b5474d08-8502-49db-8354-f30e3b90f046/resize-form-without-window-borders?forum=vbgeneral
-        ' Tring to be able to resize a form with no borders.
-        If e.Button = MouseButtons.Left Then
-            image_form.Capture = False
-            Dim theCursor As Cursor = Cursors.Arrow
-            Dim Direction As New IntPtr()
-            If e.X = 0 Or e.X = 1 Or e.X = 2 Or e.X = 3 _
-            Or e.X = image_form.Width - 1 Or e.X = image_form.Width - 2 Or e.X = image_form.Width - 3 Or
-            e.X = image_form.Width - 4 Or e.Y = 0 Or e.Y = 1 Or e.Y = 2 Or e.Y = 3 _
-            Or e.Y = image_form.Height - 1 Or e.Y = image_form.Height - 2 Or e.Y = image_form.Height - 3 _
-            Or e.Y = image_form.Height - 4 Then
-                Select Case e.X
-                    Case 0 To 3 ' On the left line
-                        Select Case e.Y
-                            Case 0 To 3
-                                ' top left corner
-                                Direction = CType(HTTOPLEFT, IntPtr)
-                                theCursor = Cursors.PanSE
-                            Case image_form.Height - 4 To image_form.Height - 1
-                                ' bottom left corner
-                                Direction = CType(HTBOTTOMLEFT, IntPtr)
-                                theCursor = Cursors.PanNE
-                            Case Else
-                                ' left side
-                                Direction = CType(HTLEFT, IntPtr)
-                                theCursor = Cursors.PanEast
-                        End Select
 
-                    Case image_form.Width - 4 To image_form.Width - 1   ' On the right line
-                        Select Case e.Y
-                            Case 0 To 3
-                                ' top right corner
-                                Direction = CType(HTTOPRIGHT, IntPtr)
-                                theCursor = Cursors.PanSW
-                            Case image_form.Height - 4 To image_form.Height - 1
-                                ' bottom right corner
-                                Direction = CType(HTBOTTOMRIGHT, IntPtr)
-                                theCursor = Cursors.PanNW
-                            Case Else
-                                ' right side
-                                Direction = CType(HTRIGHT, IntPtr)
-                                theCursor = Cursors.PanWest
-                        End Select
-
-                    Case Else
-                        Select Case e.Y
-                            Case 0 To 3
-                                ' top line
-                                Direction = CType(HTTOP, IntPtr)
-                                theCursor = Cursors.PanSouth
-                            Case image_form.Height - 4 To image_form.Height - 1
-                                ' bottom line
-                                Direction = CType(HTBOTTOM, IntPtr)
-                                theCursor = Cursors.PanNorth
-                        End Select
-
-                End Select
-                image_form.Cursor = theCursor
-                Dim msg As Message = Message.Create(image_form.Handle, WM_NCLBUTTONDOWN, Direction, IntPtr.Zero)
-                'image_form.DefWndProc(msg)
-            Else
-                'If Not hovered Then
-                image_form.Cursor = Cursors.SizeAll
-                Application.DoEvents()
-                Dim msg As Message = Message.Create(image_form.Handle, WM_NCLBUTTONDOWN, New IntPtr(HTCAPTION), IntPtr.Zero)
-                'image_form.DefWndProc(msg)
-                'End If
-            End If
-        End If
     End Sub
 
     Private Sub relocate(sender As Object, e As MouseEventArgs)
@@ -184,4 +133,54 @@ Public Class Image_Handlers
     Private Sub paint_form(sender As Object, e As PaintEventArgs)
         ControlPaint.DrawBorder(e.Graphics, image_form.ClientRectangle, Color.Black, ButtonBorderStyle.Solid)
     End Sub
+
+    'Public Function ResizeImage(ByVal scaleFactor As Double, ByVal fromStream As Stream)
+    'Dim toStream As Stream
+    'Dim Img = Bitmap.FromStream(fromStream)
+    'Dim newWidth As Integer = Img.Width * scaleFactor '(Int())(Image.Width * scaleFactor);
+    'Dim newHeight As Integer = Img.Height * scaleFactor '(Int())(Image.Height * scaleFactor);
+    'Dim thumbnailBitmap = New Bitmap(newWidth, newHeight)
+
+    'Dim thumbnailGraph = Graphics.FromImage(thumbnailBitmap)
+    'thumbnailGraph.CompositingQuality = CompositingQuality.HighQuality
+    'thumbnailGraph.SmoothingMode = SmoothingMode.HighQuality
+    'thumbnailGraph.InterpolationMode = InterpolationMode.HighQualityBicubic
+
+    'Dim imageRectangle = New Rectangle(0, 0, newWidth, newHeight)
+    'thumbnailGraph.DrawImage(Img, imageRectangle)
+
+    'thumbnailBitmap.Save(toStream, Img.RawFormat)
+
+    'thumbnailGraph.Dispose()
+    'thumbnailBitmap.Dispose()
+    'Img.Dispose()
+
+    'Return thumbnailBitmap
+    'End Function
+
+    Public Function ResizeImage(ByVal newHeight As Integer, newWidth As Integer) As Bitmap
+        'Dim toStream As Stream
+        Dim Img As Bitmap = pic
+        Dim thumbnailBitmap As Bitmap = New Bitmap(newWidth, newHeight)
+
+        Dim thumbnailGraph As Graphics = Graphics.FromImage(thumbnailBitmap)
+        thumbnailGraph.CompositingQuality = CompositingQuality.HighQuality
+        thumbnailGraph.SmoothingMode = SmoothingMode.HighQuality
+        thumbnailGraph.InterpolationMode = InterpolationMode.HighQualityBicubic
+
+        Dim imageRectangle As Rectangle = New Rectangle(0, 0, newWidth, newHeight)
+        thumbnailGraph.DrawImage(Img, imageRectangle)
+
+        'thumbnailBitmap.Save(toStream, Img.RawFormat)
+
+        thumbnailGraph.Dispose()
+        thumbnailBitmap.Dispose()
+        Img.Dispose()
+
+        Return thumbnailBitmap
+    End Function
+
+
+
+
 End Class
