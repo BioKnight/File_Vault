@@ -1,6 +1,4 @@
 ﻿Imports System.Drawing.Drawing2D
-'Imports System.Drawing
-'Imports System.IO
 
 Public Class Image_Handlers
 
@@ -11,6 +9,7 @@ Public Class Image_Handlers
         png
     End Enum
 
+    Private orig_Pic As Bitmap
     Private pic As Bitmap
     Private image_form As Form
     Private default_Size As New Size(300, 300)
@@ -35,6 +34,7 @@ Public Class Image_Handlers
 
     Sub New(Image_Path As String)
         pic = New Bitmap(Image_Path)
+        orig_Pic = pic
         image_form = New Form()
         image_form.Size = default_Size
         image_form.FormBorderStyle = FormBorderStyle.Sizable
@@ -43,13 +43,13 @@ Public Class Image_Handlers
         image_form.MaximizeBox = False
         image_form.BackgroundImage = pic
         image_form.BackgroundImageLayout = ImageLayout.Center
+        image_form.BackColor = Color.GhostWhite
 
-
-        'AddHandler image_form.Resize, AddressOf resize
+        AddHandler image_form.Resize, AddressOf resize
         AddHandler image_form.DoubleClick, AddressOf close_form
         AddHandler image_form.MouseDown, AddressOf mouse_down
-        'AddHandler image_form.MouseUp, AddressOf mouse_down
         AddHandler image_form.MouseMove, AddressOf relocate
+        AddHandler image_form.Paint, AddressOf paint_form
 
     End Sub
 
@@ -58,22 +58,7 @@ Public Class Image_Handlers
         image_form.Dispose()
     End Sub
 
-    Public Sub size_Image(height, width)
-
-        ' Determine difference in hight and width
-        Dim NewHeight As Integer = height
-        Dim NewWidth As Integer = NewHeight / pic.Height * pic.Width
-
-        If NewWidth > width Then
-            NewWidth = width
-            NewHeight = NewWidth / pic.Width * pic.Height
-        End If
-
-        pic = New Bitmap(pic, NewWidth, NewHeight)
-
-    End Sub
-
-    Private Sub size_Image()
+    Public Sub size_Image()
 
         ' Determine difference in hight and width
         Dim NewHeight As Integer = image_form.Height
@@ -83,19 +68,6 @@ Public Class Image_Handlers
             NewWidth = image_form.Width
             NewHeight = NewWidth / pic.Width * pic.Height
         End If
-
-        pic = ResizeImage(NewHeight, NewWidth)
-        'pic = New Bitmap(pic, NewWidth, NewHeight)
-
-    End Sub
-
-    Private Sub size_Image(ByVal newHeight As Integer, ByVal newWidth As Integer)
-
-        ' Determine difference in hight and width
-        'Dim NewHeight As Integer = image_form.Height
-        Dim NewWidth As Integer = NewHeight / pic.Height * pic.Width
-
-
 
         pic = ResizeImage(NewHeight, NewWidth)
         'pic = New Bitmap(pic, NewWidth, NewHeight)
@@ -113,14 +85,11 @@ Public Class Image_Handlers
     End Sub
 
     Private Sub close_form()
-        'image_form.Close()
         dispose()
     End Sub
 
     Private Sub mouse_down(sender As Object, e As MouseEventArgs)
         start_location = New Point(e.Location)
-
-
     End Sub
 
     Private Sub relocate(sender As Object, e As MouseEventArgs)
@@ -134,33 +103,9 @@ Public Class Image_Handlers
         ControlPaint.DrawBorder(e.Graphics, image_form.ClientRectangle, Color.Black, ButtonBorderStyle.Solid)
     End Sub
 
-    'Public Function ResizeImage(ByVal scaleFactor As Double, ByVal fromStream As Stream)
-    'Dim toStream As Stream
-    'Dim Img = Bitmap.FromStream(fromStream)
-    'Dim newWidth As Integer = Img.Width * scaleFactor '(Int())(Image.Width * scaleFactor);
-    'Dim newHeight As Integer = Img.Height * scaleFactor '(Int())(Image.Height * scaleFactor);
-    'Dim thumbnailBitmap = New Bitmap(newWidth, newHeight)
-
-    'Dim thumbnailGraph = Graphics.FromImage(thumbnailBitmap)
-    'thumbnailGraph.CompositingQuality = CompositingQuality.HighQuality
-    'thumbnailGraph.SmoothingMode = SmoothingMode.HighQuality
-    'thumbnailGraph.InterpolationMode = InterpolationMode.HighQualityBicubic
-
-    'Dim imageRectangle = New Rectangle(0, 0, newWidth, newHeight)
-    'thumbnailGraph.DrawImage(Img, imageRectangle)
-
-    'thumbnailBitmap.Save(toStream, Img.RawFormat)
-
-    'thumbnailGraph.Dispose()
-    'thumbnailBitmap.Dispose()
-    'Img.Dispose()
-
-    'Return thumbnailBitmap
-    'End Function
-
     Public Function ResizeImage(ByVal newHeight As Integer, newWidth As Integer) As Bitmap
-        'Dim toStream As Stream
-        Dim Img As Bitmap = pic
+
+        Dim Img As Bitmap = orig_Pic
         Dim thumbnailBitmap As Bitmap = New Bitmap(newWidth, newHeight)
 
         Dim thumbnailGraph As Graphics = Graphics.FromImage(thumbnailBitmap)
@@ -170,12 +115,6 @@ Public Class Image_Handlers
 
         Dim imageRectangle As Rectangle = New Rectangle(0, 0, newWidth, newHeight)
         thumbnailGraph.DrawImage(Img, imageRectangle)
-
-        'thumbnailBitmap.Save(toStream, Img.RawFormat)
-
-        thumbnailGraph.Dispose()
-        thumbnailBitmap.Dispose()
-        Img.Dispose()
 
         Return thumbnailBitmap
     End Function
