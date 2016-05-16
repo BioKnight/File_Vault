@@ -75,6 +75,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Encryption.vb" />
     <Compile Include="Hidden_Dialog.Designer.vb">
       <DependentUpon>Hidden_Dialog.vb</DependentUpon>
     </Compile>
