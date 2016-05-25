@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F5FB5EDC-393B-4668-BA5F-8CC36FF0860C}</ProjectGuid>
+    <ProjectGuid>{81FEB162-C406-4F38-A5C9-6CF432358F6E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>File_Vault.My.MyApplication</StartupObject>
-    <RootNamespace>File_Vault</RootNamespace>
-    <AssemblyName>File_Vault</AssemblyName>
+    <StartupObject>Network_Monitor_Client.My.MyApplication</StartupObject>
+    <RootNamespace>Network_Monitor_Client</RootNamespace>
+    <AssemblyName>Network_Monitor_Client</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
@@ -21,7 +21,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>File_Vault.xml</DocumentationFile>
+    <DocumentationFile>Network_Monitor_Client.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -31,7 +31,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>File_Vault.xml</DocumentationFile>
+    <DocumentationFile>Network_Monitor_Client.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -45,9 +45,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Icons\Secure.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -75,14 +72,6 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Encryption.vb" />
-    <Compile Include="Hidden_Dialog.Designer.vb">
-      <DependentUpon>Hidden_Dialog.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Hidden_Dialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Image_Handlers.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -105,15 +94,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Structures.vb" />
-    <Compile Include="Text_Document_Handler.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Hidden_Dialog.resx">
-      <DependentUpon>Hidden_Dialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -133,17 +117,6 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Icons\folder-secure.ico" />
-    <Content Include="Icons\folder-secure.png" />
-    <Content Include="Icons\Secure.ico" />
-    <Content Include="Icons\Secure.png" />
-    <Content Include="Icons\Security-icon.ico" />
-    <Content Include="Icons\Security-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
