@@ -34,7 +34,7 @@ Module Module1
 
         While True
             Broadcast()
-            Thread.Sleep(10000)
+            Thread.Sleep(5000)
         End While
 
         socket.Close()
